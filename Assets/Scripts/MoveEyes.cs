@@ -10,8 +10,6 @@ public class MoveEyes : MonoBehaviour
 
     void Start()
     {
-        Cursor.visible = false;
-
         rb2D = GetComponent<Rigidbody2D>();
     }
 

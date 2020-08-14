@@ -10,7 +10,6 @@ public class MoveCheese : MonoBehaviour
 
     private void Start()
     {
-        Cursor.visible = false;
         rb2D = GetComponent<Rigidbody2D>();
     }
 
