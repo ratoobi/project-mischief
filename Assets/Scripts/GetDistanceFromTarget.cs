@@ -29,13 +29,13 @@ public class GetDistanceFromTarget : MonoBehaviour
             xDistance = transform.position.x;
             yDistance = transform.position.y;
 
-            if (xDistance > -4.5f && xDistance < 4.5f && yDistance > -2.75f && yDistance < 2.75f)
+            if (xDistance > -4.0f && xDistance < 4.0f && yDistance > -4.20f && yDistance < 1.25f)
             {
                 closedMouthSprite.enabled = false;
                 openMouthSprite.enabled = true;
             }
 
-            else if (xDistance > -8.5f && xDistance < 8.5f && yDistance > -5.0f && yDistance < 5.0f)
+            else
             {
                 closedMouthSprite.enabled = true;
                 openMouthSprite.enabled = false;

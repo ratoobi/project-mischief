@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
         gameManagerAudio.Stop();
         gameManagerAudio.loop = true;
         gameManagerAudio.clip = gameMusic;
-        gameManagerAudio.volume = 1.0f;
+        gameManagerAudio.volume = 0.6f;
         gameManagerAudio.Play();
 
         gameManagerAudio.Play();
