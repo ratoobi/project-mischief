@@ -9,12 +9,15 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer cheeseSprite;
     public AudioClip menuMusic;
     public AudioClip gameMusic;
+    public AudioClip eatingSound;
+    public MoveCheese moveCheese;
 
     AudioSource gameManagerAudio;
 
     void Start()
     {
         gameManagerAudio = GetComponent<AudioSource>();
+        moveCheese = moveCheese.GetComponent<MoveCheese>();
     }
 
     public void StartGame()
@@ -22,7 +25,7 @@ public class GameManager : MonoBehaviour
         gameManagerAudio.Stop();
         gameManagerAudio.loop = true;
         gameManagerAudio.clip = gameMusic;
-        gameManagerAudio.volume = 0.6f;
+        gameManagerAudio.volume = 1.0f;
         gameManagerAudio.Play();
 
         gameManagerAudio.Play();
@@ -30,5 +33,12 @@ public class GameManager : MonoBehaviour
         menuScreen.enabled = false;
         cheeseSprite.enabled = true;
         Cursor.visible = false;
+
+        moveCheese.isGameActive = true;
+    }
+
+    public void Eat()
+    {
+        gameManagerAudio.PlayOneShot(eatingSound, 1.0f);
     }
 }
