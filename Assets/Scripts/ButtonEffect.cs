@@ -5,13 +5,20 @@ public class ButtonEffect : MonoBehaviour
 {
     public Text buttonText;
 
-    public void IncreaseFontSize()
+    Animator buttonAnimator;
+
+    private void Start()
     {
-        buttonText.fontSize = 210;
+        buttonAnimator = GetComponent<Animator>();
     }
 
-    public void DecreaseFontSize()
+    public void IncreaseButtonSize()
     {
-        buttonText.fontSize = 190;
+        buttonAnimator.SetTrigger("increase_size_trig");
+    }
+
+    public void DecreaseButtonSize()
+    {
+        buttonAnimator.SetTrigger("decrease_size_trig");
     }
 }
