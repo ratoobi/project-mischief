@@ -26,12 +26,13 @@ public class GetDistanceFromTarget : MonoBehaviour
     public GameManager gameManager;
 
     MoveCheese moveCheese;
+    Animator starAnimator;
 
     void Start()
     {
         Physics2D.queriesStartInColliders = false;
         moveCheese = GetComponent<MoveCheese>();
-
+        starAnimator = GameObject.Find("Star Animation").GetComponent<Animator>();
         gameManager = gameManager.GetComponent<GameManager>();
     }
 
@@ -120,6 +121,7 @@ public class GetDistanceFromTarget : MonoBehaviour
             if (timeout < 0)
             {
                 ShowClosedMouthFace();
+                starAnimator.SetTrigger("star_trig");
                 isInCooldown = true;
                 timeout += cooldownTime;
             }
