@@ -12,12 +12,22 @@ public class ButtonEffect : MonoBehaviour
         buttonAnimator = GetComponent<Animator>();
     }
 
-    public void IncreaseButtonSize()
+    public void IncreaseReplayButtonSize()
+    {
+        buttonAnimator.SetTrigger("increase_size_trig_2");
+    }
+
+    public void DecreaseReplayButtonSize()
+    {
+        buttonAnimator.SetTrigger("decrease_size_trig_2");
+    }
+
+    public void IncreasePlayButtonSize()
     {
         buttonAnimator.SetTrigger("increase_size_trig");
     }
 
-    public void DecreaseButtonSize()
+    public void DecreasePlayButtonSize()
     {
         buttonAnimator.SetTrigger("decrease_size_trig");
     }

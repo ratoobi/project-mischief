@@ -25,13 +25,11 @@ public class GetDistanceFromTarget : MonoBehaviour
 
     public GameManager gameManager;
 
-    MoveCheese moveCheese;
     Animator starAnimator;
 
     void Start()
     {
         Physics2D.queriesStartInColliders = false;
-        moveCheese = GetComponent<MoveCheese>();
         starAnimator = GameObject.Find("Star Animation").GetComponent<Animator>();
         gameManager = gameManager.GetComponent<GameManager>();
     }
@@ -40,77 +38,73 @@ public class GetDistanceFromTarget : MonoBehaviour
     {
         AdjustOpacity();
 
-        if (moveCheese.isGameActive)
+        timeout -= Time.deltaTime;
+
+        xDistance = transform.position.x;
+        yDistance = transform.position.y;
+
+        if (xDistance > -0.6f && xDistance < 0.32f && yDistance > -2.67f && yDistance < -1.77f)
         {
-            timeout -= Time.deltaTime;
-
-            xDistance = transform.position.x;
-            yDistance = transform.position.y;
-
-            if (xDistance > -0.6f && xDistance < 0.32f && yDistance > -2.67f && yDistance < -1.77f)
+            if (timeout < 0 && !isInCooldown)
             {
-                if (timeout < 0 && !isInCooldown)
+                if (isPlayingGlomAnimation)
                 {
-                    if (isPlayingGlomAnimation)
-                    {
-                        gameManager.Eat();
-                        moveCheese.isGameActive = false;
-                        isPlayingGlomAnimation = false;
-                        ShowClosedMouthFace();
-                    }
-                    else
-                    {
-                        timeout = glomAnimationTime;
-                        ShowOpenMouthFace();
-                        isPlayingGlomAnimation = true;
-                    }
+                    isPlayingGlomAnimation = false;
+                    ShowClosedMouthFace();
+                    gameManager.GameOver();
                 }
+                else
+                {
+                    timeout = glomAnimationTime;
+                    ShowOpenMouthFace();
+                    isPlayingGlomAnimation = true;
+                }
+            }
                 
-                if (isInCooldown)
-                {
-                    if (timeout < 0.900f)
-                        ShowSadFace();
-                    if (timeout < 0)
-                    {
-                        ShowNeutralFace();
-                        isInCooldown = false;
-                        isPlayingGlomAnimation = false;
-                        timeout = 0.850f;
-                    }
-                }
-            }
-            else if (xDistance > -4.0f && xDistance < 4.0f && yDistance > -4.20f && yDistance < 1.25f)
+            if (isInCooldown)
             {
-                if (!isPlayingGlomAnimation)
-                {
-                    timeout = 0.850f;
-                    ShowNeutralFace();
-                    semiOpenMouthSprite.enabled = true;
-                }
-                else if (isPlayingGlomAnimation)
-                    WaitForCooldown();
-            }
-            else if (xDistance > -8.0f && xDistance < 8.0f && yDistance > -4.70f && yDistance < 4.7f)
-            {
-                if (!isPlayingGlomAnimation)
-                {
-                    timeout = 0.850f;
-                    ShowNeutralFace();
-                    neutralMouthSprite.enabled = true;
-                }
-                else if (isPlayingGlomAnimation)
-                    WaitForCooldown();
-            }
-            else
-            {
-                if (!isPlayingGlomAnimation)
-                {
-                    timeout = 0.850f;
+                if (timeout < 0.900f)
                     ShowSadFace();
+                if (timeout < 0)
+                {
+                    ShowNeutralFace();
+                    isInCooldown = false;
+                    isPlayingGlomAnimation = false;
+                    timeout = 0.850f;
                 }
-                else if (isPlayingGlomAnimation)
-                    WaitForCooldown();
             }
+        }
+        else if (xDistance > -4.0f && xDistance < 4.0f && yDistance > -4.20f && yDistance < 1.25f)
+        {
+            if (!isPlayingGlomAnimation)
+            {
+                timeout = 0.850f;
+                ShowNeutralFace();
+                semiOpenMouthSprite.enabled = true;
+            }
+            else if (isPlayingGlomAnimation)
+                WaitForCooldown();
+        }
+        else if (xDistance > -8.0f && xDistance < 8.0f && yDistance > -4.70f && yDistance < 4.7f)
+        {
+            if (!isPlayingGlomAnimation)
+            {
+                timeout = 0.850f;
+                ShowNeutralFace();
+                neutralMouthSprite.enabled = true;
+            }
+            else if (isPlayingGlomAnimation)
+                WaitForCooldown();
+        }
+        else
+        {
+            if (!isPlayingGlomAnimation)
+            {
+                timeout = 0.850f;
+                ShowSadFace();
+            }
+            else if (isPlayingGlomAnimation)
+                WaitForCooldown();
         }
     }
 

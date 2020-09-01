@@ -5,7 +5,6 @@ public class MoveCheese : MonoBehaviour
     private Vector3 mousePosition;
     private Vector2 direction;
     private readonly float moveSpeed = 500.0f;
-    public bool isGameActive;
     
     Rigidbody2D rb2D;
 
@@ -13,20 +12,14 @@ public class MoveCheese : MonoBehaviour
     {
         rb2D = GetComponent<Rigidbody2D>();
         Cursor.lockState = CursorLockMode.Confined;
+
     }
 
     void FixedUpdate()
     {
-        if (isGameActive == true)
-        {
-            rb2D.bodyType = RigidbodyType2D.Dynamic;
-            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            direction = (mousePosition - transform.position).normalized;
-            rb2D.velocity = new Vector2(direction.x * moveSpeed, direction.y * moveSpeed);
-        }
-        else
-        {
-            rb2D.bodyType = RigidbodyType2D.Static;
-        }
+        rb2D.bodyType = RigidbodyType2D.Dynamic;
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        direction = (mousePosition - transform.position).normalized;
+        rb2D.velocity = new Vector2(direction.x * moveSpeed, direction.y * moveSpeed);
     }
 }

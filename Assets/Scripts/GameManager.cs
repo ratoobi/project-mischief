@@ -5,20 +5,20 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public Button playButton;
+    public Button replayButton;
     public GameObject titleScreen;
     public Image menuScreen;
     public SpriteRenderer cheeseSprite;
     public AudioClip menuMusic;
     public AudioClip gameMusic;
     public AudioClip eatingSound;
-    public MoveCheese moveCheese;
+    public GetDistanceFromTarget getDistanceFromTarget;
 
     AudioSource gameManagerAudio;
 
     void Start()
     {
         gameManagerAudio = GetComponent<AudioSource>();
-        moveCheese = moveCheese.GetComponent<MoveCheese>();
     }
 
     public void StartGame()
@@ -26,25 +26,30 @@ public class GameManager : MonoBehaviour
         gameManagerAudio.Stop();
         gameManagerAudio.loop = true;
         gameManagerAudio.clip = gameMusic;
-        gameManagerAudio.volume = 1.0f;
+        gameManagerAudio.volume = 0.75f;
         gameManagerAudio.Play();
 
-        gameManagerAudio.Play();
+        Cursor.visible = false;
+        replayButton.gameObject.SetActive(false);
         titleScreen.SetActive(false);
         menuScreen.enabled = false;
         cheeseSprite.enabled = true;
-        Cursor.visible = false;
+        getDistanceFromTarget.enabled = true;
 
-        moveCheese.isGameActive = true;
+    }
+
+    public void GameOver()
+    {
+        gameManagerAudio.PlayOneShot(eatingSound, 1.3f);
+        Cursor.visible = true;
+        replayButton.gameObject.SetActive(true);
+        cheeseSprite.enabled = false;
+        getDistanceFromTarget.enabled = false;
+
     }
 
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    public void Eat()
-    {
-        gameManagerAudio.PlayOneShot(eatingSound, 1.0f);
     }
 }
