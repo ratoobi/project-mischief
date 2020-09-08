@@ -2,8 +2,8 @@
 
 public class GetDistanceFromTarget : MonoBehaviour
 {
-    private float xDistance;
-    private float yDistance;
+    public float xDistance;
+    public float yDistance;
     private float distance;
     private readonly float minDistance = 1.7f;
     private readonly float maxDistance = 11.0f;
@@ -12,13 +12,13 @@ public class GetDistanceFromTarget : MonoBehaviour
     private float timeout = 0.850f;
     private bool isInCooldown;
     private bool isPlayingGlomAnimation;
+    private bool isFrustrated;
 
     public SpriteRenderer sadFaceSprite;
     public SpriteRenderer closedMouthFaceSprite;
     public SpriteRenderer openMouthFaceSprite;
     public SpriteRenderer neutralFaceSprite;
     public SpriteRenderer eyesSprite;
-    public SpriteRenderer strongBlushSprite;
     public SpriteRenderer blushSprite;
     public SpriteRenderer neutralMouthSprite;
     public SpriteRenderer semiOpenMouthSprite;
@@ -43,7 +43,7 @@ public class GetDistanceFromTarget : MonoBehaviour
         xDistance = transform.position.x;
         yDistance = transform.position.y;
 
-        if (xDistance > -0.6f && xDistance < 0.32f && yDistance > -2.67f && yDistance < -1.77f)
+        if (xDistance > -0.6f && xDistance < 0.32f && yDistance > -2.67f && yDistance < -1.57f)
         {
             if (timeout < 0 && !isInCooldown)
             {
@@ -101,6 +101,7 @@ public class GetDistanceFromTarget : MonoBehaviour
             if (!isPlayingGlomAnimation)
             {
                 timeout = 0.850f;
+                isFrustrated = true;
                 ShowSadFace();
             }
             else if (isPlayingGlomAnimation)
@@ -123,7 +124,10 @@ public class GetDistanceFromTarget : MonoBehaviour
         else
         {
             if (timeout < 0.900f)
+            {
+                isFrustrated = false;
                 ShowSadFace();
+            }
             if (timeout < 0)
             {
                 isInCooldown = false;
@@ -153,11 +157,17 @@ public class GetDistanceFromTarget : MonoBehaviour
 
     private void ShowSadFace()
     {
+        if (!isFrustrated)
+            AdjustOpacity(1.00f);
+        else
+            AdjustOpacity(0.25f);
+
         HideFaceSprites();
-        strongBlushSprite.enabled = true;
+        blushSprite.enabled = true;
         sadFaceSprite.enabled = true;
         eyesSprite.enabled = true;
     }
+
 
     private void HideFaceSprites()
     {
@@ -169,7 +179,13 @@ public class GetDistanceFromTarget : MonoBehaviour
         neutralMouthSprite.enabled = false;
         eyesSprite.enabled = false;
         blushSprite.enabled = false;
-        strongBlushSprite.enabled = false;
+    }
+
+    private void AdjustOpacity(float blushOpacity)
+    {
+        Color blushSpriteColor = blushSprite.color;
+        blushSpriteColor.a = blushOpacity;
+        blushSprite.color = blushSpriteColor;
     }
 
     private void AdjustOpacity()
@@ -180,10 +196,8 @@ public class GetDistanceFromTarget : MonoBehaviour
 
         blushSpriteColor.a = 1 - ((distance - minDistance) * (1 / rangeInterval));
 
-        if (blushSpriteColor.a < 0.33f)
-            blushSpriteColor.a = 0.33f;
-        if (blushSpriteColor.a > 0.85f)
-            blushSpriteColor.a = 0.85f;
+        if (blushSpriteColor.a < 0.33f) blushSpriteColor.a = 0.33f;
+        if (blushSpriteColor.a > 0.85f) blushSpriteColor.a = 0.85f;
 
         blushSprite.color = blushSpriteColor;
     }
