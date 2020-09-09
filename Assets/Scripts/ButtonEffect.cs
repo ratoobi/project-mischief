@@ -31,4 +31,13 @@ public class ButtonEffect : MonoBehaviour
     {
         buttonAnimator.SetTrigger("decrease_size_trig");
     }
+    public void IncreaseReturnButtonSize()
+    {
+        buttonAnimator.SetTrigger("increase_size_trig_3");
+    }
+
+    public void DecreaseReturnButtonSize()
+    {
+        buttonAnimator.SetTrigger("decrease_size_trig_3");
+    }
 }

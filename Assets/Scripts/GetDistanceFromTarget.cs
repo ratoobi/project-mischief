@@ -2,8 +2,8 @@
 
 public class GetDistanceFromTarget : MonoBehaviour
 {
-    public float xDistance;
-    public float yDistance;
+    private float xDistance;
+    private float yDistance;
     private float distance;
     private readonly float minDistance = 1.7f;
     private readonly float maxDistance = 11.0f;
@@ -171,7 +171,6 @@ public class GetDistanceFromTarget : MonoBehaviour
         sadFaceSprite.enabled = true;
         eyesSprite.enabled = true;
     }
-
 
     private void HideFaceSprites()
     {

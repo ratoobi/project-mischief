@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //private bool canPlayLoopingVideo = false;
+    private bool isGameActive = false;
+    private bool canPlayLoopingVideo = true;
+    private float splashScreenDelayTimeout = 0.5f;
 
-    public Button playButton;
-    public Button replayButton;
+    public Button startGameButton;
     public Button quitButton;
+    public Button returnButton;
+    public Button replayButton;
     public GameObject titleScreen;
-    public Image menuScreen;
     public SpriteRenderer cheeseSprite;
     public AudioClip menuMusic;
     public AudioClip gameMusic;
@@ -29,43 +30,41 @@ public class GameManager : MonoBehaviour
     {
         gameManagerAudio = GetComponent<AudioSource>();
 
-        //loopingVideoPlayer = loopingVideo.GetComponent<UnityEngine.Video.VideoPlayer>();
-        //preloopVideoPlayer = preloopVideo.GetComponent<UnityEngine.Video.VideoPlayer>();
+        loopingVideoPlayer = loopingVideo.GetComponent<UnityEngine.Video.VideoPlayer>();
+        preloopVideoPlayer = preloopVideo.GetComponent<UnityEngine.Video.VideoPlayer>();
 
-        //preloopVideoPlayer.Play();
-
+        preloopVideoPlayer.Play();
     }
 
-    //private void Update()
-    //{
-    //    splashScreenDelayTimeout -= Time.deltaTime;
+    private void Update()
+    {
+        if (!isGameActive)
+        {
+            splashScreenDelayTimeout -= Time.deltaTime;
 
-    //    if (!preloopVideoPlayer.isPlaying && splashScreenDelayTimeout < 0 && !loopingVideoPlayer.isPlaying)
-    //    {
+            if (!preloopVideoPlayer.isPlaying && splashScreenDelayTimeout < 0 && canPlayLoopingVideo)
+            {
+                gameManagerAudio.clip = menuMusic;
+                gameManagerAudio.Play();
+                preloopVideoCanvas.SetActive(false);
+                loopingVideoCanvas.SetActive(true);
+                loopingVideoPlayer.Play();
+                startGameButton.gameObject.SetActive(true);
+                quitButton.gameObject.SetActive(true);
+                canPlayLoopingVideo = false;
+            }
+        }
+    }
 
-    //        //loopingVideoCanvas.SetActive(true);
-    //        canPlayLoopingVideo = true;
-    //    }
-
-    //    if (canPlayLoopingVideo)
-    //    {
-    //        //gameManagerAudio.clip = menuMusic;
-    //        gameManagerAudio.Play();
-    //        //preloopVideoCanvas.SetActive(false);
-    //        loopingVideoCanvas.SetActive(true);
-    //        loopingVideoPlayer.Play();
-    //        canPlayLoopingVideo = false;
-    //    }
-
-    //}
     public void StartGame()
     {
+        isGameActive = true;
         Cursor.visible = false;
+        loopingVideoPlayer.Stop();
         titleScreen.SetActive(false);
-        menuScreen.enabled = false;
+        replayButton.gameObject.SetActive(false);
         cheeseSprite.enabled = true;
         getDistanceFromTarget.enabled = true;
-
     }
 
     public void GameOver()
@@ -74,15 +73,17 @@ public class GameManager : MonoBehaviour
         gameManagerAudio.PlayOneShot(eatingSound, 1.3f);
         Cursor.visible = true;
         replayButton.gameObject.SetActive(true);
-        quitButton.gameObject.SetActive(true);
-
+        returnButton.gameObject.SetActive(true);
         cheeseSprite.enabled = false;
         getDistanceFromTarget.enabled = false;
     }
 
-    public void RestartGame()
+    public void ReturnToTitleScreen()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        returnButton.gameObject.SetActive(false);
+        replayButton.gameObject.SetActive(false);
+        titleScreen.SetActive(true);
+        loopingVideoPlayer.Play();
     }
 
     public void PlayGameMusic()
@@ -107,13 +108,4 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
-
-    //public void ReturnToTitleScreen()
-    //{
-    //    returnButton.gameObject.SetActive(false);
-    //    titleScreen.SetActive(true);
-    //    menuScreen.enabled = true;
-    //    cheeseSprite.enabled = false;
-    //    getDistanceFromTarget.enabled = false;
-    //}
 }
