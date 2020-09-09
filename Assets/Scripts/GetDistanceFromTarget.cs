@@ -26,12 +26,15 @@ public class GetDistanceFromTarget : MonoBehaviour
     public GameManager gameManager;
 
     Animator starAnimator;
+    Animator openMouthAnimator;
 
     void Start()
     {
         Physics2D.queriesStartInColliders = false;
-        starAnimator = GameObject.Find("Star Animation").GetComponent<Animator>();
+        
         gameManager = gameManager.GetComponent<GameManager>();
+        starAnimator = GameObject.Find("Star Animation").GetComponent<Animator>();
+        openMouthAnimator = GameObject.Find("NYN open mouth face").GetComponent<Animator>();
     }
 
     private void Update()
@@ -74,7 +77,7 @@ public class GetDistanceFromTarget : MonoBehaviour
                 }
             }
         }
-        else if (xDistance > -4.0f && xDistance < 4.0f && yDistance > -4.20f && yDistance < 1.25f)
+        else if (xDistance > -3.5f && xDistance < 3.5f && yDistance > -4.20f && yDistance < 1.25f)
         {
             if (!isPlayingGlomAnimation)
             {
@@ -138,7 +141,8 @@ public class GetDistanceFromTarget : MonoBehaviour
     private void ShowOpenMouthFace()
     {
         HideFaceSprites();
-        openMouthFaceSprite.enabled = true;
+        openMouthAnimator.SetTrigger("open_mouth_trig");
+        //openMouthFaceSprite.enabled = true;
     }
 
     private void ShowClosedMouthFace()

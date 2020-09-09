@@ -836,12 +836,18 @@ MonoBehaviour:
   replayButton: {fileID: 1864179245}
   quitButton: {fileID: 0}
   titleScreen: {fileID: 484140178}
-  menuScreen: {fileID: 484140180}
+  menuScreen: {fileID: 0}
   cheeseSprite: {fileID: 1779455048}
   menuMusic: {fileID: 8300000, guid: 8f5b5160317d87d48a00e0efd901fff2, type: 3}
   gameMusic: {fileID: 8300000, guid: 911f7a446b419d24ca73cb13f8790ffb, type: 3}
   eatingSound: {fileID: 8300000, guid: 596bded1ed4e1cd4daf8e6c6472768b3, type: 3}
   getDistanceFromTarget: {fileID: 1779455043}
+  preloopVideoCanvas: {fileID: 0}
+  loopingVideoCanvas: {fileID: 0}
+  preloopVideo: {fileID: 0}
+  loopingVideo: {fileID: 0}
+  preloopVideoPlayer: {fileID: 0}
+  loopingVideoPlayer: {fileID: 0}
 --- !u!82 &581852706
 AudioSource:
   m_ObjectHideFlags: 0
