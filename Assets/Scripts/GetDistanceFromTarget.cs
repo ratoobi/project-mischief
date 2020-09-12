@@ -12,11 +12,11 @@ public class GetDistanceFromTarget : MonoBehaviour
     private float timeout = 0.850f;
     private bool isInCooldown;
     private bool isPlayingGlomAnimation;
-    private bool isFrustrated;
+    private bool isPlayingLiftFaceAnimation;
+    private bool iSlightlyFrustrated;
 
     public SpriteRenderer sadFaceSprite;
     public SpriteRenderer closedMouthFaceSprite;
-    public SpriteRenderer openMouthFaceSprite;
     public SpriteRenderer neutralFaceSprite;
     public SpriteRenderer eyesSprite;
     public SpriteRenderer blushSprite;
@@ -26,15 +26,18 @@ public class GetDistanceFromTarget : MonoBehaviour
     public GameManager gameManager;
 
     Animator starAnimator;
-    Animator openMouthAnimator;
+    Animator openMouthFaceAnimator;
+    Animator sadFaceAnimator;
 
     void Start()
     {
+        sadFaceSprite.enabled = false;
         Physics2D.queriesStartInColliders = false;
         
         gameManager = gameManager.GetComponent<GameManager>();
         starAnimator = GameObject.Find("Star Animation").GetComponent<Animator>();
-        openMouthAnimator = GameObject.Find("NYN open mouth face").GetComponent<Animator>();
+        openMouthFaceAnimator = GameObject.Find("NYN open mouth face").GetComponent<Animator>();
+        sadFaceAnimator = GameObject.Find("lift nyn face ").GetComponent<Animator>();
     }
 
     private void Update()
@@ -67,13 +70,17 @@ public class GetDistanceFromTarget : MonoBehaviour
             if (isInCooldown)
             {
                 if (timeout < 0.900f)
+                {
                     ShowSadFace();
+                }
                 if (timeout < 0)
                 {
+                    sadFaceAnimator.SetTrigger("hide_sprite_trig");
+                    isPlayingLiftFaceAnimation = false;
                     ShowNeutralFace();
                     isInCooldown = false;
                     isPlayingGlomAnimation = false;
-                    timeout = 0.850f;
+                    ResetTimeout();
                 }
             }
         }
@@ -81,33 +88,34 @@ public class GetDistanceFromTarget : MonoBehaviour
         {
             if (!isPlayingGlomAnimation)
             {
-                timeout = 0.850f;
+                ResetTimeout();
                 ShowNeutralFace();
                 semiOpenMouthSprite.enabled = true;
             }
-            else if (isPlayingGlomAnimation)
+            else
                 WaitForCooldown();
         }
         else if (xDistance > -8.0f && xDistance < 8.0f && yDistance > -4.70f && yDistance < 4.7f)
         {
             if (!isPlayingGlomAnimation)
             {
-                timeout = 0.850f;
+                ResetTimeout();
                 ShowNeutralFace();
                 neutralMouthSprite.enabled = true;
             }
-            else if (isPlayingGlomAnimation)
+            else
                 WaitForCooldown();
         }
         else
         {
             if (!isPlayingGlomAnimation)
             {
-                timeout = 0.850f;
-                isFrustrated = true;
+                ResetTimeout();
+                iSlightlyFrustrated = true;
                 ShowSadFace();
+                isPlayingLiftFaceAnimation = false;
             }
-            else if (isPlayingGlomAnimation)
+            else
                 WaitForCooldown();
         }
     }
@@ -128,25 +136,28 @@ public class GetDistanceFromTarget : MonoBehaviour
         {
             if (timeout < 0.900f)
             {
-                isFrustrated = false;
+                iSlightlyFrustrated = false;
                 ShowSadFace();
             }
             if (timeout < 0)
             {
+                sadFaceAnimator.SetTrigger("hide_sprite_trig");
+                isPlayingLiftFaceAnimation = false;
                 isInCooldown = false;
                 isPlayingGlomAnimation = false;
             }
         }
     }
+
     private void ShowOpenMouthFace()
     {
         HideFaceSprites();
-        openMouthAnimator.SetTrigger("open_mouth_trig");
-        //openMouthFaceSprite.enabled = true;
+        openMouthFaceAnimator.SetTrigger("open_mouth_trig");
     }
 
     private void ShowClosedMouthFace()
     {
+        openMouthFaceAnimator.SetTrigger("hide_sprite_trig");
         HideFaceSprites();
         closedMouthFaceSprite.enabled = true;
     }
@@ -161,21 +172,27 @@ public class GetDistanceFromTarget : MonoBehaviour
 
     private void ShowSadFace()
     {
-        if (!isFrustrated)
-            AdjustOpacity(1.00f);
-        else
-            AdjustOpacity(0.25f);
-
         HideFaceSprites();
-        blushSprite.enabled = true;
-        sadFaceSprite.enabled = true;
+        AdjustOpacity(1.00f);
+
+        if (iSlightlyFrustrated)
+        {
+            AdjustOpacity(0.25f);
+            sadFaceSprite.enabled = true;
+        }
+        else if (!isPlayingLiftFaceAnimation)
+        {
+            sadFaceAnimator.SetTrigger("lift_face_trig");
+            isPlayingLiftFaceAnimation = true;
+        }
+
         eyesSprite.enabled = true;
+        blushSprite.enabled = true;
     }
 
     private void HideFaceSprites()
     {
         neutralFaceSprite.enabled = false;
-        openMouthFaceSprite.enabled = false;
         closedMouthFaceSprite.enabled = false;
         sadFaceSprite.enabled = false;
         semiOpenMouthSprite.enabled = false;
@@ -203,5 +220,10 @@ public class GetDistanceFromTarget : MonoBehaviour
         if (blushSpriteColor.a > 0.85f) blushSpriteColor.a = 0.85f;
 
         blushSprite.color = blushSpriteColor;
+    }
+
+    private void ResetTimeout()
+    {
+        timeout = 0.850f;
     }
 }

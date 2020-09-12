@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     private bool canPlayLoopingVideo = true;
     private float splashScreenDelayTimeout = 0.5f;
 
+    public bool isDebugging;
+
     public Button startGameButton;
     public Button quitButton;
     public Button returnButton;
@@ -23,30 +25,43 @@ public class GameManager : MonoBehaviour
     public GameObject loopingVideo;
     public UnityEngine.Video.VideoPlayer preloopVideoPlayer;
     public UnityEngine.Video.VideoPlayer loopingVideoPlayer;
+    public GameObject blackScreen;
+
 
     AudioSource gameManagerAudio;
 
     void Start()
     {
+        Cursor.visible = false;
+
         gameManagerAudio = GetComponent<AudioSource>();
 
         loopingVideoPlayer = loopingVideo.GetComponent<UnityEngine.Video.VideoPlayer>();
         preloopVideoPlayer = preloopVideo.GetComponent<UnityEngine.Video.VideoPlayer>();
 
-        preloopVideoPlayer.Play();
+        if (isDebugging)
+            StartGame();
+        else
+            preloopVideoPlayer.Play();
     }
 
     private void Update()
     {
+
         if (!isGameActive)
         {
             splashScreenDelayTimeout -= Time.deltaTime;
 
+            if (splashScreenDelayTimeout < 0)
+                blackScreen.SetActive(false);
+
             if (!preloopVideoPlayer.isPlaying && splashScreenDelayTimeout < 0 && canPlayLoopingVideo)
             {
+                Cursor.visible = true;
+
                 gameManagerAudio.clip = menuMusic;
                 gameManagerAudio.Play();
-                preloopVideoCanvas.SetActive(false);
+                //preloopVideoCanvas.SetActive(false);
                 loopingVideoCanvas.SetActive(true);
                 loopingVideoPlayer.Play();
                 startGameButton.gameObject.SetActive(true);
@@ -63,6 +78,7 @@ public class GameManager : MonoBehaviour
         loopingVideoPlayer.Stop();
         titleScreen.SetActive(false);
         replayButton.gameObject.SetActive(false);
+        returnButton.gameObject.SetActive(false);
         cheeseSprite.enabled = true;
         getDistanceFromTarget.enabled = true;
     }
